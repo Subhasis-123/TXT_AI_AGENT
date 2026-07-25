@@ -1,47 +1,39 @@
 import json
 import re
-import time
-import ollama
+
+import google.generativeai as genai
+
+from config import GOOGLE_API_KEY, MODEL_NAME
+
+
+if not GOOGLE_API_KEY:
+    raise ValueError(
+        "GOOGLE_API_KEY not found. Please add it to your .env file."
+    )
+
+genai.configure(api_key=GOOGLE_API_KEY)
 
 
 class GemmaAgent:
 
-    def __init__(self, model="gemma3:4b"):
-        self.model = model
+    def __init__(self):
+        self.model = genai.GenerativeModel(MODEL_NAME)
 
     def generate(self, prompt):
 
-        start = time.time()
+        response = self.model.generate_content(prompt)
 
-        response = ollama.chat(
-            model=self.model,
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            options={
-                "temperature": 0
-            }
-        )
+        content = response.text.strip()
 
-        print(f"Response Time : {time.time()-start:.2f} sec")
-
-        content = response["message"]["content"].strip()
-
-        if not content:
-            raise Exception("Gemma returned an empty response.")
-
+        # Remove markdown code blocks if present
         content = re.sub(r"```json", "", content, flags=re.IGNORECASE)
         content = re.sub(r"```", "", content).strip()
 
-        start_idx = content.find("[")
-        end_idx = content.rfind("]")
+        match = re.search(r"\[.*\]", content, re.DOTALL)
 
-        if start_idx == -1 or end_idx == -1:
-            raise Exception("No JSON array found in Gemma response.")
+        if not match:
+            raise Exception(
+                f"Gemini did not return valid JSON.\n\nResponse:\n{content}"
+            )
 
-        json_text = content[start_idx:end_idx + 1]
-
-        return json.loads(json_text)
+        return json.loads(match.group(0))

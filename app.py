@@ -141,7 +141,7 @@ if generate:
                 txt_files
             )
 
-            status.info("🧠 Extracting Schema using Gemma...")
+            status.info("🧠 Extracting Schema using Gemini...")
             progress.progress(70)
 
             output_files = orchestrator.run()
