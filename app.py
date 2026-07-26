@@ -21,9 +21,13 @@ with st.sidebar:
 
     st.title("⚙ AI Settings")
 
-    st.metric("Model", "Gemma 3:4B")
-    st.metric("Runtime", "Ollama")
-    st.metric("Execution", "Local")
+    #st.metric("Model", "Gemma 3:4B")
+    #st.metric("Runtime", "Ollama")
+    #st.metric("Execution", "Local")
+
+    st.metric("Model", "Gemini 2.5 Flash")
+    st.metric("Provider", "Google")
+    st.metric("Execution", "Cloud API")
 
     st.divider()
 
@@ -31,7 +35,8 @@ with st.sidebar:
 
     st.success("📄 Template Reader")
     st.success("📂 File Reader")
-    st.success("🧠 Gemma Extractor")
+    #st.success("🧠 Gemma Extractor")
+    st.success("🧠 Gemini Extractor")
     st.success("📊 Excel Writer")
 
     st.divider()
@@ -57,7 +62,8 @@ generates Excel documentation automatically.
 # ---------------------------------------------------
 st.title("🤖 TXT Schema Extraction Agent")
 
-st.caption("Powered by Gemma 3:4B + Ollama")
+#st.caption("Powered by Gemma 3:4B + Ollama")
+st.caption("Powered by Google Gemini")
 
 st.write(
     """
